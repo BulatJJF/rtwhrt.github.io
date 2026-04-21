@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="author" content="Низаев Булат">
+    <meta name="copyright" content="© Низаев Булат, 2026">
+    <title>rtwhrt</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #f0f0f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        #bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 560px;
+            width: 90%;
+            margin: 0 auto;
+            padding: 1.5rem 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .profile {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .avatar-wrapper {
+            width: 112px;
+            height: 112px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .avatar-wrapper:hover {
+            transform: scale(1.02);
+            border-color: rgba(255,255,255,0.7);
+        }
+
+        .avatar {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            margin-bottom: 0.3rem;
+        }
+
+        .bio {
+            font-size: 0.95rem;
+            font-weight: 400;
+            opacity: 0.8;
+        }
+
+        .links-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+            margin: 2rem 0;
+        }
+
+        .link-card {
+            background: rgba(20, 20, 25, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 14px;
+            transition: 0.2s;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .link-card:hover {
+            background: rgba(35, 35, 45, 0.8);
+            transform: translateY(-2px);
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .link-card a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 0.85rem 1rem;
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .icon {
+            font-size: 1.3rem;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            margin-top: 3rem;
+            padding: 1rem;
+            opacity: 0.6;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        #terryTrigger {
+            cursor: pointer;
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        #terryTrigger:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        /* Кнопка звука */
+        .sound-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(20, 20, 25, 0.5);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .sound-toggle:hover {
+            background: rgba(40, 40, 50, 0.7);
+            border-color: rgba(255,255,255,0.4);
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 480px) {
+            .container { width: 92%; }
+            h1 { font-size: 1.7rem; }
+            .sound-toggle {
+                bottom: 16px;
+                right: 16px;
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<video autoplay muted loop playsinline id="bg-video" poster="assets/preview.jpg">
+    <source src="assets/video.mp4" type="video/mp4">
+</video>
+<div class="overlay"></div>
+
+<div class="container">
+    <div class="profile">
+        <div class="avatar-wrapper" id="easterEggAvatar">
+            <img class="avatar" src="assets/avatar.jpg" alt="rtwhrt">
+        </div>
+        <h1>rtwhrt</h1>
+        <div class="bio">гений маркетинга и .</div>
+    </div>
+
+    <div class="links-grid">
+        <div class="link-card" data-link="tg-channel"></div>
+        <div class="link-card" data-link="tiktok"></div>
+        <div class="link-card" data-link="tg-pm"></div>
+    </div>
+
+    <footer>
+        <div id="terryTrigger" style="cursor: pointer; color: #ccc; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='#ccc'">Сделано Терри А. Дэвисом</div>
+        <div style="margin-top: 8px; opacity: 0.6; font-size: 0.7rem;">© Низаев Булат, 2026. Все права защищены.</div>
+    </footer>
+</div>
+
+<!-- Аудио элемент -->
+<audio id="bgMusic" loop preload="metadata">
+    <source src="assets/main-bg.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Кнопка звука -->
+<div class="sound-toggle" id="soundToggle" title="Включить звук">🔇</div>
+
+<script>
+    (function() {
+        "use strict";
+
+        // ---------- ЗАШИФРОВАННЫЕ ССЫЛКИ (base64) ----------
+        const linksData = {
+            'tg-channel': 'aHR0cHM6Ly90Lm1lL3J0d2hydF9jaA==',
+            'tiktok':     'aHR0cHM6Ly90aWt0b2suY29tL0BydHdocnQ=',
+            'tg-pm':      'aHR0cHM6Ly90Lm1lL3J0d2hydA=='
+        };
+
+        const iconsMap = {
+            'tg-channel': '📢',
+            'tiktok':     '🎵',
+            'tg-pm':      '✍️'
+        };
+
+        const labelsMap = {
+            'tg-channel': 'Telegram-канал',
+            'tiktok':     'TikTok',
+            'tg-pm':      'Написать мне'
+        };
+
+        const linkCards = document.querySelectorAll('.link-card[data-link]');
+        linkCards.forEach(card => {
+            const key = card.getAttribute('data-link');
+            const encoded = linksData[key];
+            if (!encoded) return;
+
+            try {
+                const url = atob(encoded);
+                const icon = iconsMap[key] || '🔗';
+                const label = labelsMap[key] || 'Ссылка';
+
+                const a = document.createElement('a');
+                a.href = url;
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+                a.innerHTML = `<span class="icon">${icon}</span> ${label}`;
+                card.appendChild(a);
+            } catch (e) {
+                console.warn('Ошибка декодирования ссылки:', key);
+            }
+        });
+
+        // ---------- УПРАВЛЕНИЕ ЗВУКОМ ----------
+        const music = document.getElementById('bgMusic');
+        const soundToggle = document.getElementById('soundToggle');
+        let isMuted = true;
+
+        // Функция сброса UI в выключенное состояние
+        function resetSoundUI() {
+            music.muted = true;
+            music.pause();
+            music.currentTime = 0;
+            isMuted = true;
+            soundToggle.textContent = '🔇';
+            soundToggle.title = 'Включить звук';
+        }
+
+        // Инициализация
+        music.muted = true;
+        music.volume = 0.4;
+        soundToggle.textContent = '🔇';
+        soundToggle.title = 'Включить звук';
+
+        function toggleSound() {
+            if (isMuted) {
+                music.muted = false;
+                const playPromise = music.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        isMuted = false;
+                        soundToggle.textContent = '🔊';
+                        soundToggle.title = 'Выключить звук';
+                    }).catch(err => {
+                        console.warn('Автовоспроизведение заблокировано. Нажмите ещё раз.');
+                        music.muted = true;
+                        soundToggle.title = 'Нажмите для включения звука (требуется взаимодействие)';
+                    });
+                } else {
+                    isMuted = false;
+                    soundToggle.textContent = '🔊';
+                }
+            } else {
+                resetSoundUI();
+            }
+        }
+
+        soundToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleSound();
+        });
+
+        // ---------- ФУНКЦИЯ ОСТАНОВКИ МУЗЫКИ ----------
+        function stopMusic() {
+            if (music && !music.paused) {
+                music.pause();
+                music.currentTime = 0;
+            }
+        }
+
+        // Остановка при уходе со страницы
+        window.addEventListener('beforeunload', stopMusic);
+
+        // Остановка при клике на любую ссылку
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', stopMusic);
+        });
+
+        // ---------- ПАСХАЛКА: 15 кликов по аватарке ----------
+        let clickCount = 0;
+        let clickTimeout = null;
+        const avatar = document.getElementById('easterEggAvatar');
+        if (avatar) {
+            avatar.addEventListener('click', () => {
+                clickCount++;
+                if (clickTimeout) clearTimeout(clickTimeout);
+                clickTimeout = setTimeout(() => { clickCount = 0; }, 1000);
+                if (clickCount >= 15) {
+                    stopMusic(); // ЯВНАЯ ОСТАНОВКА
+                    window.open('easter.html', '_blank');
+                    clickCount = 0;
+                }
+            });
+        }
+
+        // ---------- ПАСХАЛКА: 5 кликов по надписи Терри ----------
+        let terryClickCount = 0;
+        let terryTimeout = null;
+        const terryTrigger = document.getElementById('terryTrigger');
+        if (terryTrigger) {
+            terryTrigger.addEventListener('click', (e) => {
+                e.preventDefault();
+                terryClickCount++;
+                if (terryTimeout) clearTimeout(terryTimeout);
+                terryTimeout = setTimeout(() => { terryClickCount = 0; }, 1000);
+                if (terryClickCount >= 5) {
+                    stopMusic(); // ЯВНАЯ ОСТАНОВКА
+                    window.location.href = 'mem.html';
+                    terryClickCount = 0;
+                }
+            });
+        }
+
+        // ---------- СБРОС ЗВУКА ПРИ ВОЗВРАТЕ НА СТРАНИЦУ ----------
+        window.addEventListener('pageshow', (event) => {
+            // Если страница восстановлена из кэша (возврат по кнопке "Назад")
+            if (event.persisted) {
+                resetSoundUI();
+            }
+        });
+
+        // ---------- ФОЛБЭК ВИДЕО ----------
+        const video = document.getElementById('bg-video');
+        video.addEventListener('error', () => {
+            console.warn('Видео не загружено, используется статичный фон');
+        });
+
+        // ---------- ПРЕДЗАГРУЗКА АУДИО ----------
+        window.addEventListener('load', () => {
+            music.muted = true;
+            music.play().catch(() => {});
+        });
+
+    })();
+</script>
+
+<noscript>
+    <style>.sound-toggle { display: none; }</style>
+</noscript>
+</body>
+</html>

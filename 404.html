@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="author" content="Низаев Булат">
+    <meta name="copyright" content="© Низаев Булат, 2026">
+    <title>404 · rtwhrt</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #f0f0f0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        #bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            opacity: 0.45;
+            pointer-events: none;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .error-container {
+            max-width: 500px;
+            width: 100%;
+            padding: clamp(1.5rem, 5vw, 2.5rem) clamp(1rem, 4vw, 2rem);
+            background: rgba(20, 20, 25, 0.55);
+            backdrop-filter: blur(16px);
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.5s ease-out;
+            z-index: 2;
+            max-height: calc(100vh - 32px);
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.3) transparent;
+        }
+
+        .error-container::-webkit-scrollbar {
+            width: 4px;
+        }
+        .error-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .error-container::-webkit-scrollbar-thumb {
+            background-color: rgba(255,255,255,0.3);
+            border-radius: 10px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .glitch {
+            font-size: clamp(6rem, 20vw, 9rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+            text-shadow: 3px 3px 0 rgba(255, 0, 0, 0.3), -3px -3px 0 rgba(0, 255, 255, 0.3);
+            animation: glitchShift 3s infinite alternate;
+        }
+
+        @keyframes glitchShift {
+            0% { text-shadow: 3px 3px 0 rgba(255, 0, 0, 0.3), -3px -3px 0 rgba(0, 255, 255, 0.3); }
+            25% { text-shadow: -3px 2px 0 rgba(255, 0, 0, 0.4), 3px -2px 0 rgba(0, 255, 255, 0.4); }
+            50% { text-shadow: 2px -3px 0 rgba(255, 0, 0, 0.3), -2px 3px 0 rgba(0, 255, 255, 0.3); }
+            75% { text-shadow: -2px -2px 0 rgba(255, 0, 0, 0.4), 2px 2px 0 rgba(0, 255, 255, 0.4); }
+            100% { text-shadow: 3px 3px 0 rgba(255, 0, 0, 0.3), -3px -3px 0 rgba(0, 255, 255, 0.3); }
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .message {
+            font-size: 1rem;
+            opacity: 0.7;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        .home-link {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 40px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            backdrop-filter: blur(8px);
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+
+        .home-link:hover {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: scale(1.02);
+        }
+
+        .footer-note {
+            margin-top: 2rem;
+            font-size: 0.7rem;
+            opacity: 0.4;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-note a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .footer-note a:hover {
+            text-decoration: underline;
+        }
+
+        /* Статичный фон на случай отсутствия видео */
+        .static-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, #1a1a2e, #0a0a0a);
+            z-index: -3;
+        }
+
+        /* Кнопка звука */
+        .sound-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(20, 20, 25, 0.5);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .sound-toggle:hover {
+            background: rgba(40, 40, 50, 0.7);
+            border-color: rgba(255,255,255,0.4);
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 480px) {
+            .sound-toggle {
+                bottom: 16px;
+                right: 16px;
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<video autoplay muted loop playsinline id="bg-video" poster="assets/404preview.jpg">
+    <source src="assets/videoo3.mp4" type="video/mp4">
+</video>
+<div class="static-bg"></div>
+<div class="overlay"></div>
+
+<div class="error-container">
+    <div class="glitch">404</div>
+    <h2>Страница не найдена</h2>
+    <div class="message">
+        Возможно, она была удалена,<br>
+        или вы ошиблись адресом.
+    </div>
+    <a href="index.html" class="home-link">← На главную</a>
+    <div class="footer-note">
+        <span title="Терри бы не одобрил">TempleOS is watching</span>
+    </div>
+</div>
+
+<audio id="bgMusic" loop preload="metadata">
+    <source src="assets/404muz.mp3" type="audio/mpeg">
+</audio>
+
+<div class="sound-toggle" id="soundToggle" title="Включить звук">🔇</div>
+
+<script>
+    (function() {
+        "use strict";
+
+        const video = document.getElementById('bg-video');
+        video.addEventListener('error', () => {
+            video.style.display = 'none';
+        });
+
+        const footerNote = document.querySelector('.footer-note span');
+        if (footerNote) {
+            footerNote.addEventListener('click', () => {
+                console.log('%c🐮 "The CIA and the NSA are in bed with the aliens." — Terry A. Davis', 'color: #aaf; font-style: italic;');
+            });
+        }
+
+        // ---------- УПРАВЛЕНИЕ ЗВУКОМ (простая логика, старт с 🔇) ----------
+        const music = document.getElementById('bgMusic');
+        const soundToggle = document.getElementById('soundToggle');
+        let isMuted = true;
+
+        music.muted = true;
+        music.volume = 0.4;
+        soundToggle.textContent = '🔇';
+        soundToggle.title = 'Включить звук';
+
+        function toggleSound() {
+            if (isMuted) {
+                music.muted = false;
+                music.play().then(() => {
+                    isMuted = false;
+                    soundToggle.textContent = '🔊';
+                    soundToggle.title = 'Выключить звук';
+                }).catch(err => {
+                    console.warn('Автовоспроизведение заблокировано. Нажмите ещё раз.');
+                    music.muted = true;
+                    soundToggle.title = 'Нажмите для включения звука';
+                });
+            } else {
+                music.muted = true;
+                music.pause();
+                isMuted = true;
+                soundToggle.textContent = '🔇';
+                soundToggle.title = 'Включить звук';
+            }
+        }
+
+        soundToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleSound();
+        });
+
+        window.addEventListener('load', () => {
+            music.muted = true;
+            music.play().catch(() => {});
+        });
+
+        window.addEventListener('beforeunload', function() {
+            if (music && !music.paused) {
+                music.pause();
+                music.currentTime = 0;
+            }
+        });
+
+        // Остановка при клике на ссылки
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function() {
+                if (music && !music.paused) {
+                    music.pause();
+                    music.currentTime = 0;
+                }
+            });
+        });
+
+    })();
+</script>
+
+</body>
+</html>

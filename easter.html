@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="author" content="Низаев Булат">
+    <meta name="copyright" content="© Низаев Булат, 2026">
+    <title>тигрлар топ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #f0f0f0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        #bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 2;
+            pointer-events: none;
+        }
+        .content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            padding: 20px;
+        }
+        .message {
+            color: #e0c080;
+            font-size: clamp(1.8rem, 8vw, 3.2rem);
+            font-weight: 600;
+            text-shadow: 0 0 30px rgba(0,0,0,0.9), 0 0 8px rgba(200,160,80,0.3);
+            letter-spacing: 5px;
+            margin-bottom: 3rem;
+            text-transform: uppercase;
+            word-break: break-word;
+        }
+        .tiger-button {
+            display: inline-block;
+            padding: 0.9rem 2.5rem;
+            background: rgba(20, 20, 25, 0.5);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(220, 200, 160, 0.5);
+            border-radius: 40px;
+            color: #d4b87a;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+        .tiger-button:hover {
+            background: rgba(40, 40, 50, 0.8);
+            border-color: #e0c080;
+            color: #eedbaa;
+            transform: scale(1.02);
+            box-shadow: 0 0 25px rgba(200,160,80,0.3);
+        }
+        .back-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            background: rgba(20, 20, 25, 0.5);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 40px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            pointer-events: auto;
+        }
+        .back-link:hover {
+            background: rgba(40, 40, 50, 0.7);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: scale(1.02);
+        }
+        .sound-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(20, 20, 25, 0.5);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(220, 200, 160, 0.5);
+            color: #d4b87a;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .sound-toggle:hover {
+            background: rgba(40, 40, 50, 0.8);
+            border-color: #e0c080;
+            color: #eedbaa;
+            transform: scale(1.05);
+        }
+        @media (max-width: 480px) {
+            .message { letter-spacing: 3px; }
+            .tiger-button { font-size: 1rem; padding: 0.75rem 2rem; }
+            .back-link { top: 12px; left: 12px; padding: 0.5rem 1rem; font-size: 0.85rem; }
+            .sound-toggle { bottom: 16px; right: 16px; width: 40px; height: 40px; font-size: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <video autoplay muted loop playsinline id="bg-video" poster="assets/easter-preview.jpg">
+        <source src="assets/videoo2.mp4" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
+
+    <a href="index.html" class="back-link">← На главную</a>
+
+    <div class="content">
+        <div class="message">тигрлар топ</div>
+        <span class="tiger-button" id="tigerLink">стать тигром</span>
+    </div>
+
+    <audio id="bgMusic" loop preload="metadata">
+        <source src="assets/tmusic.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="sound-toggle" id="soundToggle" title="Включить звук">🔇</div>
+
+    <script>
+        (function() {
+            "use strict";
+
+            // Зашифрованная ссылка
+            const encodedLink = 'aHR0cHM6Ly90Lm1lL3RpZ3JsYXJz';
+            const tigerButton = document.getElementById('tigerLink');
+            if (tigerButton) {
+                try {
+                    const url = atob(encodedLink);
+                    tigerButton.addEventListener('click', () => {
+                        window.open(url, '_blank');
+                    });
+                    tigerButton.title = 'Перейти в Telegram';
+                } catch (e) {
+                    console.warn('Ошибка декодирования ссылки');
+                }
+            }
+
+            const video = document.getElementById('bg-video');
+            video.addEventListener('error', () => {
+                video.style.display = 'none';
+                console.warn('Видео не найдено. Используется чёрный фон.');
+            });
+
+            // ---------- УПРАВЛЕНИЕ ЗВУКОМ (простая логика, старт с 🔇) ----------
+            const music = document.getElementById('bgMusic');
+            const soundToggle = document.getElementById('soundToggle');
+            let isMuted = true;
+
+            music.muted = true;
+            music.volume = 0.4;
+            soundToggle.textContent = '🔇';
+            soundToggle.title = 'Включить звук';
+
+            function toggleSound() {
+                if (isMuted) {
+                    music.muted = false;
+                    music.play().then(() => {
+                        isMuted = false;
+                        soundToggle.textContent = '🔊';
+                        soundToggle.title = 'Выключить звук';
+                    }).catch(err => {
+                        console.warn('Автовоспроизведение заблокировано. Нажмите ещё раз.');
+                        music.muted = true;
+                        soundToggle.title = 'Нажмите для включения звука';
+                    });
+                } else {
+                    music.muted = true;
+                    music.pause();
+                    isMuted = true;
+                    soundToggle.textContent = '🔇';
+                    soundToggle.title = 'Включить звук';
+                }
+            }
+
+            soundToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleSound();
+            });
+
+            window.addEventListener('load', () => {
+                music.muted = true;
+                music.play().catch(() => {});
+            });
+
+            window.addEventListener('beforeunload', function() {
+                if (music && !music.paused) {
+                    music.pause();
+                    music.currentTime = 0;
+                }
+            });
+
+            // Остановка при клике на любые ссылки или кнопку
+            document.querySelectorAll('a, .tiger-button').forEach(el => {
+                el.addEventListener('click', function() {
+                    if (music && !music.paused) {
+                        music.pause();
+                        music.currentTime = 0;
+                    }
+                });
+            });
+
+        })();
+    </script>
+</body>
+</html>
