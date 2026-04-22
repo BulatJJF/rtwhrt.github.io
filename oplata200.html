@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="author" content="Низаев Булат">
+    <meta name="copyright" content="© Низаев Булат, 2026">
+    <title>Оплата 200 ₽ · rtwhrt</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #f0f0f0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        #bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .content {
+            position: relative;
+            z-index: 3;
+            max-width: 500px;
+            width: 90%;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .payment-card {
+            background: rgba(20, 20, 25, 0.55);
+            backdrop-filter: blur(16px);
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            padding: 2rem 1.8rem;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            text-align: center;
+            color: #ffffff;
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 20px rgba(0,0,0,0.6);
+        }
+
+        .price {
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #ffd966;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 15px rgba(255, 220, 100, 0.3);
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .pay-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 215, 0, 0.12);
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            border-radius: 40px;
+            color: #ffd966;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-align: center;
+            backdrop-filter: blur(8px);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .pay-btn:hover {
+            background: rgba(255, 215, 0, 0.25);
+            border-color: #ffd966;
+            color: #fff3d1;
+            transform: scale(1.01);
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.3);
+        }
+
+        .pay-btn.tg-btn {
+            background: rgba(0, 160, 255, 0.12);
+            border-color: rgba(0, 160, 255, 0.5);
+            color: #7fc9ff;
+        }
+
+        .pay-btn.tg-btn:hover {
+            background: rgba(0, 160, 255, 0.25);
+            border-color: #7fc9ff;
+            color: #b3dfff;
+            box-shadow: 0 0 25px rgba(0, 160, 255, 0.3);
+        }
+
+        .qr-container {
+            margin-top: 1.5rem;
+            text-align: center;
+            display: none;
+        }
+
+        .qr-container img {
+            max-width: 250px;
+            width: 100%;
+            border-radius: 16px;
+            border: 2px solid rgba(255, 215, 0, 0.4);
+        }
+
+        .qr-placeholder {
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 16px;
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+            margin-top: 1rem;
+        }
+
+        .back-link:hover {
+            color: white;
+        }
+
+        .sound-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(20, 20, 25, 0.5);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .sound-toggle:hover {
+            background: rgba(40, 40, 50, 0.7);
+            border-color: rgba(255,255,255,0.4);
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 480px) {
+            .payment-card {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            .price {
+                font-size: 2.5rem;
+            }
+            .pay-btn {
+                font-size: 1rem;
+                padding: 0.9rem;
+            }
+            .sound-toggle {
+                bottom: 16px;
+                right: 16px;
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<video autoplay muted loop playsinline id="bg-video" poster="assets/oplata-preview.jpg">
+    <source src="assets/video.mp4" type="video/mp4">
+</video>
+<div class="overlay"></div>
+
+<div class="content">
+    <div class="payment-card">
+        <h1>ОПЛАТА</h1>
+        <div class="price">200 ₽</div>
+        <div class="buttons">
+            <!-- Кнопка оплаты через DonatePay -->
+            <a href="https://donatepay.ru/don/1490204" target="_blank" class="pay-btn" id="donateBtn">💳 Оплатить картой</a>
+            <!-- Кнопка показа QR-кода СБП -->
+            <button class="pay-btn" id="sbpBtn">📱 Оплатить по СБП</button>
+        </div>
+        <!-- Контейнер для QR-кода СБП -->
+        <div class="qr-container" id="qrContainer">
+            <img src="assets/sbp-qr.png" alt="QR-код СБП" id="qrImage" style="display: none;">
+            <div class="qr-placeholder" id="qrPlaceholder">
+                QR-код для оплаты по СБП<br> (загрузите изображение в assets/sbp-qr.png)
+            </div>
+        </div>
+
+        <!-- Блок после оплаты -->
+        <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1);">
+            <p style="margin-bottom: 1rem; opacity: 0.9; font-size: 0.95rem;">
+                ✅ После оплаты отправьте чек в Telegram и получите ответы.
+            </p>
+            <a href="https://t.me/durov_in_tatarstan" target="_blank" class="pay-btn tg-btn" style="margin-bottom: 1rem;">
+                📩 Отправить чек
+            </a>
+            <p style="opacity: 0.6; font-size: 0.8rem;">
+                Если кнопка не работает, напишите вручную: <br> <span style="color: #7fc9ff;">@durov_in_tatarstan</span>
+            </p>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="vpr.html" class="back-link">← Назад к ВПР</a>
+        </div>
+    </div>
+</div>
+
+<!-- Аудио -->
+<audio id="bgMusic" loop preload="metadata">
+    <source src="assets/main-bg.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Кнопка звука -->
+<div class="sound-toggle" id="soundToggle" title="Включить звук">🔇</div>
+
+<script>
+    (function() {
+        "use strict";
+
+        // --- Фолбэк видео ---
+        const video = document.getElementById('bg-video');
+        video.addEventListener('error', () => {
+            video.style.display = 'none';
+            console.warn('Видео не найдено.');
+        });
+
+        // --- Управление звуком (идеальная версия) ---
+        const music = document.getElementById('bgMusic');
+        const soundToggle = document.getElementById('soundToggle');
+        let isMuted = true;
+
+        function resetSoundUI() {
+            music.muted = true;
+            music.pause();
+            music.currentTime = 0;
+            isMuted = true;
+            soundToggle.textContent = '🔇';
+            soundToggle.title = 'Включить звук';
+        }
+
+        music.muted = true;
+        music.volume = 0.4;
+        soundToggle.textContent = '🔇';
+        soundToggle.title = 'Включить звук';
+
+        function toggleSound() {
+            if (isMuted) {
+                music.muted = false;
+                music.play().then(() => {
+                    isMuted = false;
+                    soundToggle.textContent = '🔊';
+                    soundToggle.title = 'Выключить звук';
+                }).catch(err => {
+                    console.warn('Автовоспроизведение заблокировано. Нажмите ещё раз.');
+                    music.muted = true;
+                    soundToggle.title = 'Нажмите для включения звука (требуется взаимодействие)';
+                });
+            } else {
+                resetSoundUI();
+            }
+        }
+
+        soundToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleSound();
+        });
+
+        function stopMusic() {
+            if (music && !music.paused) {
+                music.pause();
+                music.currentTime = 0;
+            }
+        }
+
+        window.addEventListener('beforeunload', stopMusic);
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', stopMusic);
+        });
+
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted) {
+                resetSoundUI();
+            }
+        });
+
+        window.addEventListener('load', () => {
+            music.muted = true;
+            music.play().catch(() => {});
+        });
+
+        // --- Логика показа QR-кода СБП ---
+        const sbpBtn = document.getElementById('sbpBtn');
+        const qrContainer = document.getElementById('qrContainer');
+        const qrImage = document.getElementById('qrImage');
+        const qrPlaceholder = document.getElementById('qrPlaceholder');
+
+        qrImage.addEventListener('load', () => {
+            qrImage.style.display = 'block';
+            qrPlaceholder.style.display = 'none';
+        });
+        qrImage.addEventListener('error', () => {
+            qrImage.style.display = 'none';
+            qrPlaceholder.style.display = 'block';
+        });
+
+        sbpBtn.addEventListener('click', () => {
+            if (qrContainer.style.display === 'block') {
+                qrContainer.style.display = 'none';
+            } else {
+                qrContainer.style.display = 'block';
+                if (qrImage.complete) {
+                    if (qrImage.naturalWidth === 0) {
+                        qrImage.style.display = 'none';
+                        qrPlaceholder.style.display = 'block';
+                    } else {
+                        qrImage.style.display = 'block';
+                        qrPlaceholder.style.display = 'none';
+                    }
+                }
+            }
+        });
+
+    })();
+</script>
+
+</body>
+</html>
