@@ -172,33 +172,47 @@
             transform: scale(1.05);
         }
 
+        .legal-links {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            z-index: 99;
+            display: flex;
+            gap: 8px;
+            background: rgba(20, 20, 25, 0.4);
+            backdrop-filter: blur(6px);
+            padding: 6px 12px;
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.15);
+            font-size: 1.2rem;
+        }
+
+        .legal-links a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .legal-links a:hover {
+            color: white;
+        }
+
+        .legal-links span {
+            color: rgba(255,255,255,0.3);
+        }
+
         @media (max-width: 480px) {
-            .info-card {
-                padding: 1.5rem;
-            }
-            h1 {
-                font-size: 1.7rem;
-            }
-            .price {
-                font-size: 2rem;
-            }
-            .buy-button {
-                font-size: 1.1rem;
-                padding: 0.9rem;
-            }
-            .sound-toggle {
-                bottom: 16px;
-                right: 16px;
-                width: 40px;
-                height: 40px;
-                font-size: 20px;
-            }
+            .info-card { padding: 1.5rem; }
+            h1 { font-size: 1.7rem; }
+            .price { font-size: 2rem; }
+            .buy-button { font-size: 1.1rem; padding: 0.9rem; }
+            .sound-toggle { bottom: 16px; right: 16px; width: 40px; height: 40px; font-size: 20px; }
+            .legal-links { bottom: 70px; right: 16px; font-size: 1rem; padding: 5px 10px; }
         }
     </style>
 </head>
 <body>
 
-<!-- Видеофон (можно использовать то же, что на главной) -->
 <video autoplay muted loop playsinline id="bg-video" poster="assets/vpr-preview.jpg">
     <source src="assets/video.mp4" type="video/mp4">
 </video>
@@ -226,26 +240,28 @@
     </div>
 </div>
 
-<!-- Аудио для фона (можно использовать ту же музыку) -->
 <audio id="bgMusic" loop preload="metadata">
     <source src="assets/main-bg.mp3" type="audio/mpeg">
 </audio>
 
-<!-- Кнопка звука -->
 <div class="sound-toggle" id="soundToggle" title="Включить звук">🔇</div>
+
+<div class="legal-links">
+    <a href="privacy.html" target="_blank" title="Политика конфиденциальности">📜</a>
+    <span>|</span>
+    <a href="terms.html" target="_blank" title="Пользовательское соглашение">⚖️</a>
+</div>
 
 <script>
     (function() {
         "use strict";
 
-        // Фолбэк видео
-        const video = document.getElementById('bg-video');
-        video.addEventListener('error', () => {
-            video.style.display = 'none';
-            console.warn('Видео не найдено. Используется чёрный фон.');
+        document.getElementById('bg-video').addEventListener('error', () => {
+            document.getElementById('bg-video').style.display = 'none';
+            console.warn('Видео не найдено.');
         });
 
-        // ---------- УПРАВЛЕНИЕ ЗВУКОМ (идеальная версия) ----------
+        // ---------- УПРАВЛЕНИЕ ЗВУКОМ ----------
         const music = document.getElementById('bgMusic');
         const soundToggle = document.getElementById('soundToggle');
         let isMuted = true;
@@ -262,7 +278,7 @@
         music.muted = true;
         music.volume = 0.4;
         soundToggle.textContent = '🔇';
-        soundToggle.title = 'Включить звук';
+        soundToggle.title = 'Включить звуك';
 
         function toggleSound() {
             if (isMuted) {
@@ -281,7 +297,7 @@
             }
         }
 
-        soundToggle.addEventListener('click', (e) => {
+        soundToggle.addEventListener('click', e => {
             e.stopPropagation();
             toggleSound();
         });
@@ -294,21 +310,16 @@
         }
 
         window.addEventListener('beforeunload', stopMusic);
-        document.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', stopMusic);
-        });
+        document.querySelectorAll('a').forEach(link => link.addEventListener('click', stopMusic));
 
-        window.addEventListener('pageshow', (event) => {
-            if (event.persisted) {
-                resetSoundUI();
-            }
+        window.addEventListener('pageshow', event => {
+            if (event.persisted) resetSoundUI();
         });
 
         window.addEventListener('load', () => {
             music.muted = true;
             music.play().catch(() => {});
         });
-
     })();
 </script>
 
